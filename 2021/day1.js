@@ -37,6 +37,11 @@ let p = (prev,sign,next,res) => console.log(`${prev} ${sign} ${next} =>  ${res}`
 itli = itli.slice(0,itli.length - 1)
 
 // OK it is not a word, should have use SHALLOW instead of "GROUNDER" =)
+let deeper = 0
+let grounder = 0
+let eq = 0
+let prev = 137
+
 itli.forEach((v,i) => { if(prev < v){ p(prev,'<',v, 'DEEPER')}; if(prev > v){ p(prev,'>',v, 'GROUNDER')}; if(prev == v){ p(prev,'==',v, 'EQ')};  prev = v})
 itli.forEach((v,i) => { if(prev < v){ p(prev,'<',v, 'DEEPER'); deeper++}; if(prev > v){ p(prev,'>',v, 'GROUNDER'); grounder++}; if(prev == v){ p(prev,'==',v, 'EQ'); eq++};  prev = v})
 
