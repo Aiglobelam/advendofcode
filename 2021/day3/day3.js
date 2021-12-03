@@ -1,4 +1,5 @@
 var fs = require('fs')
+const { exit } = require('process')
 
 let i = fs.readFileSync('./input.txt')
 let it = i.toString('utf-8')
@@ -171,15 +172,14 @@ const getRowsWithOneOrZeroAtPos = (oneOrZero, pos, list) => {
     return list.filter(row => row[pos] === oneOrZero)
 }
 
-// Start with all 1000 in diagnosticReport => "row 0" = [0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0]
-//                                    then => "row 1" = [0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1]
+// Start with all 1000 rows in diagnosticReport 
+// "row 0" = [0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0]
+// "row 1" = [0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1]
+// "row x" = ...
 // first bit is either "row[0]" OR "row[11]"
 // next bit is the one to the right => indicates we should start with "row[0]"
-
 const findOxyGenRate = (index, list) => {
     console.log(index,'===> findOxyGenRate at index:', index, 'in list of length:', list.length)
-    
-   
     let currentBitIndex = index
     console.log('currentBitIndex', currentBitIndex)
     const mcb = getMostCommonBitAtIndex(list, currentBitIndex)
@@ -194,11 +194,14 @@ const findOxyGenRate = (index, list) => {
     }
 }
 
+// Start with all 1000 rows in diagnosticReport 
+// "row 0" = [0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0]
+// "row 1" = [0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1]
+// "row x" = ...
+// first bit is either "row[0]" OR "row[11]"
+// next bit is the one to the right => indicates we should start with "row[0]"
 const findCO2scrubRate = (index, list) => {
-    console.log('===> findCO2scrubRate at index:', index, 'in list of length:', list.length)
-    // Start with all 12 numbers => "row" = [0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0]
-    // first bit is either "row[0]" OR "row[11]"
-    // next bit is the one to the right => indicates we should start with "row[0]"
+    console.log('===> findCO2scrubRate at index:', index, 'in list of length:', list.length, list)
     let currentBitIndex = index
     console.log('currentBitIndex', currentBitIndex)
     const lcb = getLeastCommonBitAtIndex(list, currentBitIndex)
@@ -209,17 +212,10 @@ const findCO2scrubRate = (index, list) => {
         return nextList[0]
     } else {
         const nextBitIndex = currentBitIndex + 1
-        return findOxyGenRate(nextBitIndex, nextList)
+        return findCO2scrubRate(nextBitIndex, nextList)
     }
 }
 
-// lifeSupRate = oxygenGeneratorRating * CO2scrubberRating
-let lifeSupRate = 0
-let oxygenGeneratorRating = 0
-let CO2scrubberRating = 0
-
-let bitCriteriaOxygenGeneratorRating = ''
-let bitCriteriaCO2scrubberRating = ''
 
 const oxyBits = findOxyGenRate(0, diagnosticReport)
 const oxyBitsString = oxyBits.join('')
@@ -236,5 +232,7 @@ console.log('oxyBitsString', oxyBitsString)
 console.log('oxyBitsInt', oxyBitsInt)
 console.log('co2bitsAsInt', co2bitsAsInt)
 
+// lifeSupRate = oxygenGeneratorRating * CO2scrubberRating
 console.log('FIRST GUESS 933*2751 = 2566683 => WRONG')
+console.log('SECOND GUESS 933*3622 = 3379326 => CORRECT') // I was invoking findOxyGenRate inside of findCO2scrubRate =)
 console.log('result = ', oxyBitsInt * co2bitsAsInt)
