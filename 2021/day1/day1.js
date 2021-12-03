@@ -1,3 +1,5 @@
+var fs = require('fs')
+
 let i = fs.readFileSync('input.txt')
 let it = i.toString('utf-8')
 let itl = it.split("\n")
