@@ -1,5 +1,5 @@
 var fs = require('fs')
-const { exit } = require('process')
+
 
 let i = fs.readFileSync('./input.txt')
 let it = i.toString('utf-8')
